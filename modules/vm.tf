@@ -8,7 +8,7 @@ variable "rg_name" {}
 variable "location" {}
 
 resource "random_id" "suffix" {
-  byte_length = 2
+  byte_length = 3
 }
 
 resource "azurerm_virtual_network" "vnet" {
