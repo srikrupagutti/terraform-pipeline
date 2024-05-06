@@ -15,7 +15,7 @@ resource "random_id" "suffix" {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.env}-${random_id.suffix.hex}"
-  env                 = var.env
+  location            = var.loaction
   address_space       = ["10.0.0.0/16"]
   resource_group_name = var.rg_name
 }
@@ -29,7 +29,7 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_network_interface" "nic" {
   name                = "vm-nic-${var.env}-${random_id.suffix.hex}"
-  env                 = var.env
+  location            = var.loaction
   resource_group_name = var.rg_name
   ip_configuration {
     name                          = "vmipconfig-${var.env}-${random_id.suffix.hex}"
@@ -48,7 +48,7 @@ resource "azurerm_public_ip" "pip" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = "LinuxVm-${var.env}-${random_id.suffix.hex}"
-  env                   = var.env
+  location            = var.loaction
   network_interface_ids = [azurerm_network_interface.nic.id]
   size                  = "Standard_DS1_v2"
   os_disk {
