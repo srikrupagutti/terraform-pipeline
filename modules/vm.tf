@@ -5,32 +5,32 @@ provider "azurerm" {
 }
 variable "rg_name" {}
 
-variable "location" {}
+variable "env" {}
 
 resource "random_id" "suffix" {
   byte_length = 3
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-${random_id.suffix.hex}"
-  location            = var.location
+  name                = "vnet-${var.env}-${random_id.suffix.hex}"
+  env                 = var.env
   address_space       = ["10.0.0.0/16"]
   resource_group_name = var.rg_name
 }
 
 resource "azurerm_subnet" "subnet" {
-  name                 = "vmsubnet-${random_id.suffix.hex}"
+  name                 = "vmsubnet-${var.env}-${random_id.suffix.hex}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = var.rg_name
   address_prefixes     = ["10.0.10.0/24"]
 }
 
 resource "azurerm_network_interface" "nic" {
-  name                = "vm-nic-${random_id.suffix.hex}"
-  location            = var.location
+  name                = "vm-nic-${var.env}-${random_id.suffix.hex}"
+  env                 = var.env
   resource_group_name = var.rg_name
   ip_configuration {
-    name                          = "vmipconfig-${random_id.suffix.hex}"
+    name                          = "vmipconfig-${var.env}-${random_id.suffix.hex}"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip.id
@@ -38,16 +38,15 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_public_ip" "pip" {
-  name                = "pipip-${random_id.suffix.hex}"
-  location            = var.location
+  name                = "pipip-${var.env}-${random_id.suffix.hex}"
+  env                 = var.env
   resource_group_name = var.rg_name
   allocation_method   = "Dynamic"
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "LinuxVm-${random_id.suffix.hex}"
-  location              = var.location
-  resource_group_name   = var.rg_name
+  name                  = "LinuxVm-${var.env}-${random_id.suffix.hex}"
+  env                 = var.env
   network_interface_ids = [azurerm_network_interface.nic.id]
   size                  = "Standard_DS1_v2"
   os_disk {
