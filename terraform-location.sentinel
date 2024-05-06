@@ -1,0 +1,10 @@
+# Restrict the location to specific regions
+import "tfplan"
+
+main = rule {
+    all tfplan.resources.azurerm_linux_virtual_machine as _, instances {
+        all instances as _, r {
+            r.address_space[0] in ["West Europe", "West US"]
+        }
+    }
+}
