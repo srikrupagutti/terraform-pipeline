@@ -15,7 +15,7 @@ resource "random_id" "suffix" {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-${var.env}-${random_id.suffix.hex}"
-  location            = var.loaction
+  env                 = var.env
   address_space       = ["10.0.0.0/16"]
   resource_group_name = var.rg_name
 }
