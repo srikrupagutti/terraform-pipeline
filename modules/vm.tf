@@ -7,6 +7,8 @@ variable "rg_name" {}
 
 variable "env" {}
 
+variable "location" {}
+
 resource "random_id" "suffix" {
   byte_length = 3
 }
@@ -39,14 +41,14 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_public_ip" "pip" {
   name                = "pipip-${var.env}-${random_id.suffix.hex}"
-  env                 = var.env
+  location            = var.loaction
   resource_group_name = var.rg_name
   allocation_method   = "Dynamic"
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = "LinuxVm-${var.env}-${random_id.suffix.hex}"
-  env                 = var.env
+  env                   = var.env
   network_interface_ids = [azurerm_network_interface.nic.id]
   size                  = "Standard_DS1_v2"
   os_disk {
