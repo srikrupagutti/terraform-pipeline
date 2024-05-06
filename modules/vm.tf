@@ -67,6 +67,3 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 }
-terraform init -input=false
-terraform plan -out=tfplan -input=false
-terraform apply -input=false tfplan
